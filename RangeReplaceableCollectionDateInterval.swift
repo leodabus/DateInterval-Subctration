@@ -60,6 +60,34 @@ public func - (lhs: DateInterval, rhs: [DateInterval]) -> [DateInterval] {
 }
 
 // ***********************************************************************
+
+extension Date {
+    
+    init?(calendar: Calendar? = nil,
+          year: Int? = nil,
+          month: Int? = nil,
+          day: Int? = nil,
+          hour: Int? = nil,
+          minute: Int? = nil,
+          second: Int? = nil, nanosecond: Int? = nil, defaultDate: Date? = nil) {
+        
+        let calendar = calendar ?? Calendar.current
+        var components = calendar.dateComponents([.calendar, .year, .month, .day, .hour, .minute, .second], from: defaultDate ?? calendar.startOfDay(for: Date()))
+        
+        components.year       = year       ?? components.year
+        components.month      = month      ?? components.month
+        components.day        = day        ?? components.day
+        components.hour       = hour       ?? components.hour
+        components.minute     = minute     ?? components.minute
+        components.second     = second     ?? components.second
+        components.nanosecond = nanosecond ?? components.nanosecond
+        
+        guard let date = components.date else { return nil }
+        self.init(timeInterval: 0, since: date)
+    }
+}
+
+// ***********************************************************************
 // testing DateInterval 
 // let di0 = DateInterval(start: Date(hour: 12)!, end: Date(hour: 18)!)
 // let di1 = DateInterval(start: Date(hour: 13)!, end: Date(hour: 15)!)
