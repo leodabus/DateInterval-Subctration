@@ -3,7 +3,7 @@
 //  RangeReplaceableCollectionDateInterval.swift
 //  
 //
-//  Created by Leo Dabus on 11/18/2018.
+//  Created by Leo Dabus on 2/10/2019.
 //
 //  This is an implementation on top of the logic posted by Rob Ryan post on StackOverflow
 //  https://stackoverflow.com/a/54613327/2303865
