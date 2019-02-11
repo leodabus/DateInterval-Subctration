@@ -8,8 +8,6 @@
 //  This is an implementation on top of the logic posted by Rob Ryan post on StackOverflow
 //  https://stackoverflow.com/a/54613327/2303865
 
-
-
 extension RangeReplaceableCollection where Element == DateInterval {
     
     mutating func subtract(_ intervals: Self) {
@@ -52,8 +50,14 @@ extension RangeReplaceableCollection where Element == DateInterval {
     static public func -= (lhs: inout Self, rhs: Self) {
         lhs.subtract(rhs)
     }
+    static public func -= (lhs: inout Self, rhs: Element) {
+        lhs.subtract(rhs)
+    }
     
     static public func - (lhs: Self, rhs: Self) -> Self {
+        return lhs.subtracting(rhs)
+    }
+    static public func - (lhs: Self, rhs: Element) -> Self {
         return lhs.subtracting(rhs)
     }
 }
