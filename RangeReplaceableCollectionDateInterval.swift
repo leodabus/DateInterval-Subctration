@@ -5,7 +5,7 @@
 //
 //  Created by Leo Dabus on 2/10/2019.
 //
-//  This is an implementation on top of the logic posted by Rob Ryan post on StackOverflow
+//  This is an implementation on top of the logic posted by Rob Ryan on StackOverflow
 //  https://stackoverflow.com/a/54613327/2303865
 
 extension RangeReplaceableCollection where Element == DateInterval {
@@ -16,15 +16,15 @@ extension RangeReplaceableCollection where Element == DateInterval {
             while index < endIndex {
                 let interval = self[index]
                 if let intersection = interval.intersection(with: dateInterval) {
-                    var replacements: [DateInterval] = []
+                    var sequence: [DateInterval] = []
                     if intersection.start > interval.start {
-                        replacements.append(DateInterval(start: interval.start, end: intersection.start))
+                        sequence.append(DateInterval(start: interval.start, end: intersection.start))
                     }
                     if intersection.end < interval.end {
-                        replacements.append(DateInterval(start: intersection.end, end: interval.end))
+                        sequence.append(DateInterval(start: intersection.end, end: interval.end))
                     }
-                    replaceSubrange(index...index, with: replacements)
-                    index = self.index(index, offsetBy: replacements.count)
+                    replaceSubrange(index...index, with: sequence)
+                    index = self.index(index, offsetBy: sequence.count)
                 } else {
                     index = self.index(after: index)
                 }
