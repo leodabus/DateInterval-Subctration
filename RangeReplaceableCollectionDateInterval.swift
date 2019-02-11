@@ -34,30 +34,46 @@ extension RangeReplaceableCollection where Element == DateInterval {
         }
     }
     
+    mutating func subtract(_ interval: Element) {
+        subtract(Self([interval]))
+    }
+    
     func subtracting(_ intervals: Self) -> Self {
         var dateIntervals = self
         dateIntervals.subtract(intervals)
         return dateIntervals
     }
-}
-
-extension DateInterval {
-    func subtracting(_ intervals: [DateInterval]) -> [DateInterval] {
-        return [self].subtracting(intervals)
+    func subtracting(_ interval: Element) -> Self {
+        var dateIntervals = self
+        dateIntervals.subtract(Self([interval]))
+        return dateIntervals
+    }
+    
+    static public func -= (lhs: inout Self, rhs: Self) {
+        lhs.subtract(rhs)
+    }
+    
+    static public func - (lhs: Self, rhs: Self) -> Self {
+        return lhs.subtracting(rhs)
     }
 }
 
-public func -= (lhs: inout [DateInterval], rhs: [DateInterval]) {
-    lhs.subtract(rhs)
+extension DateInterval {
+    func subtracting(_ interval: DateInterval) -> [DateInterval] {
+        return [self].subtracting([interval])
+    }
+    func subtracting(_ intervals: [DateInterval]) -> [DateInterval] {
+        return [self].subtracting(intervals)
+    }
+    static public func - (lhs: DateInterval, rhs: DateInterval) -> [DateInterval] {
+        return lhs.subtracting(rhs)
+    }
+    static public func - (lhs: DateInterval, rhs: [DateInterval]) -> [DateInterval] {
+        return lhs.subtracting(rhs)
+    }
 }
 
-public func - (lhs: [DateInterval], rhs: [DateInterval]) -> [DateInterval] {
-    return lhs.subtracting(rhs)
-}
 
-public func - (lhs: DateInterval, rhs: [DateInterval]) -> [DateInterval] {
-    return lhs.subtracting(rhs)
-}
 
 // ***********************************************************************
 
