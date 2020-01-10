@@ -18,10 +18,10 @@ extension RangeReplaceableCollection where Element == DateInterval {
                 if let intersection = interval.intersection(with: dateInterval) {
                     var sequence: [DateInterval] = []
                     if intersection.start > interval.start {
-                        sequence.append(DateInterval(start: interval.start, end: intersection.start))
+                        sequence.append(.init(start: interval.start, end: intersection.start))
                     }
                     if intersection.end < interval.end {
-                        sequence.append(DateInterval(start: intersection.end, end: interval.end))
+                        sequence.append(.init(start: intersection.end, end: interval.end))
                     }
                     replaceSubrange(index...index, with: sequence)
                     index = self.index(index, offsetBy: sequence.count)
@@ -33,7 +33,7 @@ extension RangeReplaceableCollection where Element == DateInterval {
     }
     
     mutating func subtract(_ interval: Element) {
-        subtract(Self([interval]))
+        subtract(Self(CollectionOfOne(interval)))
     }
     
     func subtracting(_ intervals: Self) -> Self {
@@ -43,38 +43,22 @@ extension RangeReplaceableCollection where Element == DateInterval {
     }
     func subtracting(_ interval: Element) -> Self {
         var dateIntervals = self
-        dateIntervals.subtract(Self([interval]))
+        dateIntervals.subtract(Self(CollectionOfOne(interval)))
         return dateIntervals
     }
     
-    static public func -= (lhs: inout Self, rhs: Self) {
-        lhs.subtract(rhs)
-    }
-    static public func -= (lhs: inout Self, rhs: Element) {
-        lhs.subtract(rhs)
-    }
+    static public func -= (lhs: inout Self, rhs: Self) { lhs.subtract(rhs) }
+    static public func -= (lhs: inout Self, rhs: Element) { lhs.subtract(rhs) }
     
-    static public func - (lhs: Self, rhs: Self) -> Self {
-        return lhs.subtracting(rhs)
-    }
-    static public func - (lhs: Self, rhs: Element) -> Self {
-        return lhs.subtracting(rhs)
-    }
+    static public func - (lhs: Self, rhs: Self) -> Self { lhs.subtracting(rhs) }
+    static public func - (lhs: Self, rhs: Element) -> Self { lhs.subtracting(rhs) }
 }
 
 extension DateInterval {
-    func subtracting(_ interval: DateInterval) -> [DateInterval] {
-        return [self].subtracting([interval])
-    }
-    func subtracting(_ intervals: [DateInterval]) -> [DateInterval] {
-        return [self].subtracting(intervals)
-    }
-    static public func - (lhs: DateInterval, rhs: DateInterval) -> [DateInterval] {
-        return lhs.subtracting(rhs)
-    }
-    static public func - (lhs: DateInterval, rhs: [DateInterval]) -> [DateInterval] {
-        return lhs.subtracting(rhs)
-    }
+    func subtracting(_ interval: DateInterval) -> [DateInterval] { [self].subtracting([interval]) }
+    func subtracting(_ intervals: [DateInterval]) -> [DateInterval] { [self].subtracting(intervals) }
+    static public func - (lhs: DateInterval, rhs: DateInterval) -> [DateInterval] { lhs.subtracting(rhs) }
+    static public func - (lhs: DateInterval, rhs: [DateInterval]) -> [DateInterval] { lhs.subtracting(rhs) }
 }
 
 
@@ -83,23 +67,17 @@ extension DateInterval {
 
 extension Date {
     
-    init?(calendar: Calendar? = nil,
-          year: Int? = nil,
-          month: Int? = nil,
-          day: Int? = nil,
-          hour: Int? = nil,
-          minute: Int? = nil,
-          second: Int? = nil, nanosecond: Int? = nil, defaultDate: Date? = nil) {
+    init?(calendar: Calendar? = nil, year: Int? = nil, month: Int? = nil, day: Int? = nil, hour: Int? = nil, minute: Int? = nil, second: Int? = nil, nanosecond: Int? = nil, defaultDate: Date? = nil) {
         
-        let calendar = calendar ?? Calendar.current
+        let calendar = calendar ?? .current
         var components = calendar.dateComponents([.calendar, .year, .month, .day, .hour, .minute, .second], from: defaultDate ?? calendar.startOfDay(for: Date()))
         
-        components.year       = year       ?? components.year
-        components.month      = month      ?? components.month
-        components.day        = day        ?? components.day
-        components.hour       = hour       ?? components.hour
-        components.minute     = minute     ?? components.minute
-        components.second     = second     ?? components.second
+        components.year = year ?? components.year
+        components.month = month ?? components.month
+        components.day = day ?? components.day
+        components.hour = hour ?? components.hour
+        components.minute = minute ?? components.minute
+        components.second = second ?? components.second
         components.nanosecond = nanosecond ?? components.nanosecond
         
         guard let date = components.date else { return nil }
